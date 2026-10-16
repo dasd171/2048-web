@@ -1,0 +1,14 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>2048</title>
+<style>body{font-family:sans-serif;background:#faf8ef;text-align:center}#b{display:inline-grid;grid-template-columns:repeat(4,80px);gap:8px;background:#bbada0;padding:8px;border-radius:8px}
+.t{width:80px;height:80px;line-height:80px;font-size:28px;font-weight:bold;border-radius:4px;background:#cdc1b4;color:#776e65}</style></head><body>
+<h1>2048</h1><p>分数 <b id="s">0</b></p><div id="b"></div><p>方向键 / 手指滑动</p><script>
+let g=Array(16).fill(0),sc=0;const C={2:'#eee4da',4:'#ede0c8',8:'#f2b179',16:'#f59563',32:'#f67c5f',64:'#f65e3b',128:'#edcf72',256:'#edcc61',512:'#edc850',1024:'#edc53f',2048:'#edc22e'};
+function add(){const e=g.map((v,i)=>v?-1:i).filter(i=>i>=0);if(e.length)g[e[Math.random()*e.length|0]]=Math.random()<.9?2:4}
+function draw(){b.innerHTML=g.map(v=>`<div class=t style="background:${C[v]||(v?'#3c3a32':'')};color:${v>4?'#fff':''}">${v||''}</div>`).join('');s.textContent=sc}
+function line(r){r=r.filter(Boolean);for(let i=0;i<r.length-1;i++)if(r[i]==r[i+1]){r[i]*=2;sc+=r[i];r.splice(i+1,1)}while(r.length<4)r.push(0);return r}
+function move(d){const old=g.join();for(let k=0;k<4;k++){let idx=[0,1,2,3].map(j=>d<2?k*4+j:j*4+k);if(d%2)idx.reverse();const r=line(idx.map(i=>g[i]));idx.forEach((i,j)=>g[i]=r[j])}
+if(g.join()!=old){add();draw()}}
+onkeydown=e=>{const m={ArrowLeft:0,ArrowRight:1,ArrowUp:2,ArrowDown:3}[e.key];if(m!=null){e.preventDefault();move(m)}};
+let sx,sy;ontouchstart=e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY};ontouchend=e=>{const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;
+if(Math.max(Math.abs(dx),Math.abs(dy))>30)move(Math.abs(dx)>Math.abs(dy)?(dx<0?0:1):(dy<0?2:3))};add();add();draw();
+</script></body></html>
